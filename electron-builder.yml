@@ -1,0 +1,12 @@
+appId: top.focsoul.bilibili
+productName: Bilibili
+copyright: Copyright © 2021 Yuxuan jiang
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
