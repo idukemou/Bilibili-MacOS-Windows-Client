@@ -2,7 +2,7 @@
 
 ## #. 项目依赖
 
-<section style="">
+<section align="left">
   <img src="https://img.shields.io/badge/Next.js-10.1.3-blue" />
 	<img src="https://img.shields.io/badge/Redux-4.0.5-green" />
   <img src="https://img.shields.io/badge/React-17.0.2-blue" />
