@@ -1,0 +1,92 @@
+.recommend-item-wrapper{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 0 20px;
+}
+
+.rcmd-item{
+  width: 230px;
+  height: 220px;
+  clear: left;
+  margin-top: 20px;
+  cursor: pointer;
+  border-bottom: 1px solid rgb(231, 231, 231);;
+
+  .rcmd-item-info-wrapper{
+    width: 230px;
+    height: 140px;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+
+    .rcmd-item-image{
+      width: 100%;
+      height: 100%;
+    }
+
+    .rcmd-item-stat{
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      position: absolute;
+      bottom: 0px;
+      left: 0;
+      box-shadow:inset 0px -30px 15px -15px rgba(0,0,0,0.6);
+
+      span{
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 300;
+        margin-right:10px;
+
+        &.rcmd-item-duration{
+          padding: 2px 5px;
+          background-color: rgba(0,0,0,0.5);
+          border-radius: 2px;
+        }
+
+        &:first-child{
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .rcmd-item-title-wrapper{
+    width: 230px;
+    height: 110px;
+    display: flex;
+    margin-top: 10px;
+
+    .rcmd-item-owner{
+      width: 30px;
+      height: 30px;
+      border-radius: 30px;
+      margin-right: 10px;
+      overflow: hidden;
+
+      &>img{
+        width: 100%;
+      }
+    }
+
+    .rcmd-item-title{
+      width: 230px - 30px - 10px;
+      height: 46px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+
+      strong{
+        font-weight: 400;
+        color: rgb(42, 42, 42);
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

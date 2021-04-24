@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { GET_COUNTRY_LIST, GET_CATEGORY_LIST } from \"./actionTypes\";\nexport const getCountryListAction = countryList => ({\n  type: GET_COUNTRY_LIST,\n  countryList\n});\nexport const getCategoryListAction = categoryList => ({\n  type: GET_CATEGORY_LIST,\n  categoryList\n});","map":null,"metadata":{},"sourceType":"module"}

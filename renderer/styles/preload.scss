@@ -1,0 +1,71 @@
+#preload{
+  display: flex;
+  position: absolute;
+  background-color: white;
+  align-items: center;
+  flex-direction: column;
+  transition: opacity 0.3s;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.preload-page-appear{
+  opacity: 1;
+}
+
+.preload-page-destroy{
+  opacity: 0;
+}
+
+#preload-image{
+  width: 360px;
+  height: 460px;
+  background-image: url("/image/preload.png");
+  background-position: center;
+  background-size: cover;
+  margin-top: 10%;
+  animation-name: preloadImage;
+  animation-duration: 1s;
+}
+
+@keyframes preloadImage {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+#preload-logo{
+  width: 100px;
+  height: 30px;
+  background-image: url("/image/logo.png");
+  background-position: center;
+  background-size: cover;
+  margin-top: 3%;
+}
+
+#preload-btn{
+  position: absolute;
+  width: 80px;
+  height: 26px;
+  top: 3%;
+  right: 3%;
+  border: 0 solid transparent;
+  outline: none;
+  border-radius: 30px;
+  background-color: rgba(161, 161, 161, 0.1);
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover{
+    color: rgba(250, 107, 147, 1);
+  }
+}

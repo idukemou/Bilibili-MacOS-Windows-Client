@@ -1,98 +1,36 @@
+import {getCountryListAction} from "../redux/actionCreators";
 import React from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
-import {
-  Layout,
-  Form,
-  Select,
-  InputNumber,
-  DatePicker,
-  Switch,
-  Slider,
-  Button,
-} from 'antd';
+import store from '../redux/store';
+import electron from 'electron';
+import Layout from "../components/layout/layout";
+import Preload from "../components/layout/preload";
 
-const {
-  Header,
-  Content,
-} = Layout;
-const { Item: FormItem } = Form;
-const { Option } = Select;
+class Home extends React.Component{
 
-function Home() {
-  return (
-    <React.Fragment>
-      <Head>
-        <title>Home Page</title>
-      </Head>
+    static async getInitialProps(ctx){
+        return{
+            path: await ctx.pathname
+        }
+    }
 
-      <Header>
-        <Link href="/next">
-          <a>Go to next page</a>
-        </Link>
-      </Header>
+    constructor(props){
+        super(props);
+        this.state = store.getState();
+        store.subscribe(() => this.setState(store.getState()));
+    }
 
-      <Content style={{ padding: 48 }}>
-        <Form layout='horizontal'>
-          <FormItem
-            label='Input Number'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <InputNumber size='large' min={1} max={10} style={{ width: 100 }} defaultValue={3} name='inputNumber' />
-            <a href='#'>Link</a>
-          </FormItem>
-
-          <FormItem
-            label='Switch'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Switch defaultChecked />
-          </FormItem>
-
-          <FormItem
-            label='Slider'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Slider defaultValue={70} />
-          </FormItem>
-
-          <FormItem
-            label='Select'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Select size='large' defaultValue='react' style={{ width: 192 }}>
-              <Option value='react'>React</Option>
-              <Option value='redux'>Redux</Option>
-              <Option value='nextjs'>Next.js</Option>
-            </Select>
-          </FormItem>
-
-          <FormItem
-            label='DatePicker'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <DatePicker name='startDate' />
-          </FormItem>
-          <FormItem
-            style={{ marginTop: 48 }}
-            wrapperCol={{ span: 8, offset: 8 }}
-          >
-            <Button size='large' type='primary' htmlType='submit'>
-              OK
-            </Button>
-            <Button size='large' style={{ marginLeft: 8 }}>
-              Cancel
-            </Button>
-          </FormItem>
-        </Form>
-      </Content>
-    </React.Fragment>
-  );
-};
+    render(){
+        return (
+            <>
+                <Preload />
+                <Head>
+                    <title>Bilibili</title>
+                </Head>
+                <Layout/>
+            </>
+        )
+    }
+}
 
 export default Home;

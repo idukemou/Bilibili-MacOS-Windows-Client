@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "Bilibili 客户端",
+  "name": "Bilibili",
   "description": "第三方 Bilibili MacOS & Windows 客户端，基于 Electron, next.js & 官方 API 制成。",
   "version": "1.0.0",
   "author": "Yuxuan Jiang <yjiang2393@gmail.com>",
@@ -18,7 +18,11 @@
   "dependencies": {
     "electron-serve": "^1.1.0",
     "electron-store": "^7.0.2",
-    "node-libcurl": "^2.3.2"
+    "flv.js": "^1.5.0",
+    "jsencrypt": "^3.1.0",
+    "node-libcurl": "^2.3.2",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
