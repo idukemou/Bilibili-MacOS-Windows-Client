@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import store from "../../redux/store";
 import electron from 'electron';
-import {getRecommendListAction} from "../../redux/actionCreators";
+import { getRecommendListAction } from "../../redux/actionCreators";
+import { convertDuration, convertViews } from "../../utils/utils";
 
 const ipcRenderer = electron.ipcRenderer || false;
 
@@ -12,157 +13,99 @@ if(ipcRenderer){
     });
 }
 
-function convertDuration(time){
-    const hour = Math.floor(time / 3600 % 24);
-    const min = Math.floor(time / 60 % 60);
-    const sec = Math.floor(time % 60);
 
-    if(hour >= 1 && min === 0 && sec === 0){
-        return `${hour}:00:00`;
-    }else if(hour >= 1 && min !== 0 && sec === 0){
-        return `${hour}:${min}:00`;
-    }else if(hour >= 1 && min !== 0 && sec !== 0){
-        return `${hour}:${min}:${sec}`;
-    }else if(min >= 1 && sec === 0){
-        return `${min}:00`;
-    }else if(min >= 1 && sec !== 0){
-        return `${min}:${sec}`
-    }else{
-        return `0:${sec}`
-    }
+/**
+ * Recommend UI Component.
+ * @param props the props from its parent component
+ * @returns {JSX.Element} the UI parts used for rendering
+ * @constructor none
+ */
+function RecommendUI(props){
 
-    return '0:0'
-}
+    const box = useRef(null);
+    const [offsetTop, setOffsetTop] = useState(0);
+    const [display, setDisplay] = useState(true);
 
-function convertViews(views){
-    if(views < 10000){
-        return views;
-    }
 
-    return (views / 10000).toFixed(1)+'万';
-}
-
-class RecommendUI extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            offsetTop: 0
+    useEffect(() => {
+        if((props.clientData.scrollTop - offsetTop > 0) || (offsetTop - (240) - props.clientData.scrollTop > props.clientData.clientHeight)){
+            setDisplay(false);
+        }else{
+            setDisplay(true);
         }
-    }
+    });
 
-    componentDidMount() {
-        this.setState({
-            offsetTop: this.box.offsetTop
-        })
-    }
+    useEffect(() => {
+        setOffsetTop(box.current.offsetTop + 220);
+    }, [offsetTop]);
 
-    render() {
-        const data = this.props.data;
+    const data = props.videoInfo;
 
-        return(
-            <>
-                <div
-                    className='rcmd-item'
-                    onClick={() => console.log('post')}
-                    ref={box => this.box = box}
-                    style={{
-                        visibility: (
-                            (this.state.offsetTop > this.props.position + 540) || (this.state.offsetTop < this.props.position - 540)
-                            ? 'hidden': 'visible'
-                        )
-                    }}
-                >
-                    <div className='rcmd-item-info-wrapper'>
-                        <img
-                            src={data.pic}
-                            alt={data.title}
-                            className='rcmd-item-image'
-                            style={{
-                                display: (
-                                    (this.state.offsetTop > this.props.position + 540) || (this.state.offsetTop < this.props.position - 540)
-                                        ? 'none': 'block'
-                                )
-                            }}
-                        />
-                        <div className='rcmd-item-stat'>
-                            <span className='rcmd-item-duration'>{convertDuration(data.duration)}</span>
-                            <span className='rcmd-item-views'>{convertViews(data.stat.view)}观看</span>
-                        </div>
-                    </div>
-                    <div className='rcmd-item-title-wrapper'>
-                        <div className='rcmd-item-owner'>
-                            <img
-                                src={data.owner.face}
-                                alt={data.owner.name}
-                                style={{
-                                    display: (
-                                        (this.state.offsetTop > this.props.position + 540) || (this.state.offsetTop < this.props.position - 540)
-                                            ? 'none': 'block'
-                                    )
-                                }}
-                            />
-                        </div>
-                        <div className='rcmd-item-title'>
-                            <strong>{data.title}</strong>
-                        </div>
+    return(
+        <div className='rcmd-item' ref={box}>
+            <div className={'rcmd-item-wrapper'} style={{display: (display ? 'block': 'none')}}>
+                <div className='rcmd-item-info-wrapper'>
+                    <img src={data.pic} alt={data.title} className='rcmd-item-image' />
+                    <div className='rcmd-item-stat'>
+                        <span className='rcmd-item-duration'> {convertDuration(data.duration)} </span>
+                        <span className='rcmd-item-views'> {convertViews(data.stat.view)}观看 </span>
                     </div>
                 </div>
-            </>
-        )
-    }
+                <div className='rcmd-item-title-wrapper'>
+                    <div className='rcmd-item-owner'>
+                        <img src={data.owner.face} alt={data.owner.name} />
+                    </div>
+                    <div className='rcmd-item-title'>
+                        <strong> {data.title} </strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }
 
-export default class Recommend extends React.Component{
+/**
+ * Recommend Section Component
+ * @param props the props from parent component
+ * @returns {JSX.Element} the Recommend UI parts used for rendering
+ * @constructor none
+ */
+export default function Recommend(props){
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            recommendList: []
+    const [recommendList, setRecommendList] = useState(store.getState().recommendList);
+    const [counter, setCounter] = useState(0);
+
+    useEffect(() => {
+        store.subscribe(() => {
+            setRecommendList(store.getState().recommendList);
+        });
+    }, [store.getState().recommendList]);
+
+    useEffect(() => {
+        if(props.loading && counter <= 20){
+            loadMore();
+            console.log('rcmd.js.75 =====> loadMore');
+            setCounter(counter+1);
         }
-    }
+    }, [props.loading]);
 
-    componentDidMount() {
-        const _this = this;
-        this.unsubscribe = store.subscribe(() => {
-            this.setState({
-                recommendList: store.getState().recommendList
-            }, () => {
-                setTimeout(()=>{
-                    _this.unsubscribe();
-                }, 2000)
-            })
-        })
-    }
-
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        if(nextProps.loading){
-            this.loadMore();
-        }
-
-        return true;
-    }
-
-    loadMore = () => {
-        const _this = this;
+    function loadMore(){
         if(ipcRenderer){
             ipcRenderer.invoke('request_recommend_list_append')
                 .then(data => {
-                    _this.setState({
-                        recommendList: _this.state.recommendList.concat(data.item)
-                    })
+                    const temp = recommendList.concat(data.item);
+                    setRecommendList(temp);
                 });
         }
     }
 
-    render(){
-        return(
-            <>
-                {
-                    this.state.recommendList.map((list, index) => (
-                        <RecommendUI key={index} data={list} {...this.props} />
-                    ))
-                }
-            </>
-        )
-    }
+    return(
+        <>
+            {
+                recommendList.map((list, index) => (
+                    <RecommendUI key={index} videoInfo={list} {...props} />
+                ))
+            }
+        </>
+    )
 }

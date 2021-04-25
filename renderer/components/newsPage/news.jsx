@@ -1,66 +1,58 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Header from "../layout/header";
+import ContentFrame, {Content} from "../layout/contentFrame";
 
 const menuList = [
-    {
-        name: '热门',
-        key: 'hot',
-        offset: 0
-    },
-    {
-        name: '关注',
-        key: 'follow',
-        offset: 1
-    }
+    {name: '热门', key: 'hot', offset: 0},
+    {name: '关注', key: 'follow', offset: 1}
 ]
 
-export default class News extends React.Component{
+function Test(props){
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            active: menuList[0]
-        }
+    return(
+        <section>
+            {props.content}
+        </section>
+    )
+}
+
+export default function News(props){
+
+    const [active, setActive] = useState(menuList[0]);
+
+    function handleChangeMenu(offset){
+        setActive(menuList[offset]);
     }
 
-    handleChangeMenu = (offset) => {
-        this.setState({
-            active: menuList[offset]
-        })
-    }
-
-    render(){
-        return(
-            <section style={{display: (this.props.display? 'block': 'none'), overflow: 'hidden', height: '100%'}}>
-                <Header
-                    center={
-                        <div className="header-menu">
-                            {
-                                menuList.map((menu, index) => (
-                                    <a
-                                        href="#"
-                                        className={`header-menu-item ${this.state.active.key === menu.key ? 'active': ''}`}
-                                        key={menu.key}
-                                        onClick={() => this.handleChangeMenu(menu.offset)}
-                                    >
-                                        <span>{menu.name}</span>
-                                    </a>
-                                ))
-                            }
-                        </div>
-                    }
-                />
-
-                <section id="news-content-container" style={{width: '200%', zIndex: 1000 ,transition:'all 0.3s' ,height:'532px', position: 'absolute', left: `${this.state.active.offset * -1000}px`, overflow: "hidden"}}>
-                    <div style={{width: '1000px', height: '532px', float: "left"}}>
-
+    return(
+        <section style={{display: (props.display? 'block': 'none'), overflow: 'hidden', height: '100%'}}>
+            <Header
+                center={
+                    <div className="header-menu">
+                        {
+                            menuList.map((menu, index) => (
+                                <a
+                                    href="#"
+                                    className={`header-menu-item ${active.key === menu.key ? 'active': ''}`}
+                                    key={menu.key}
+                                    onClick={() => handleChangeMenu(menu.offset)}
+                                >
+                                    <span>{menu.name}</span>
+                                </a>
+                            ))
+                        }
                     </div>
+                }
+            />
 
-                    <div style={{width: '1000px', height:'532px', float: "left", overflow: 'scroll'}}>
-
-                    </div>
-                </section>
-            </section>
-        )
-    }
+            <ContentFrame activeIndex={active.offset}>
+                <Content>
+                    <Test content='热门' />
+                </Content>
+                <Content>
+                    <Test content='关注'/>
+                </Content>
+            </ContentFrame>
+        </section>
+    )
 }

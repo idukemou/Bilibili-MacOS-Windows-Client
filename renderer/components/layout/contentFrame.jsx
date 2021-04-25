@@ -1,109 +1,96 @@
-import React from "react";
+import React, {useEffect, useRef, useState} from "react";
 import store from "../../redux/store";
 
-export default class ContentFrame extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            availableSize: store.getState().availableSize
-        }
-        store.subscribe(() => this.setState({
-            availableSize: store.getState().availableSize
-        }))
-    }
+export default function ContentFrame (props){
+    const [availableSize, setAvailableSize] = useState(store.getState().availableSize);
 
+    useEffect(() => {
+        store.subscribe(() => setAvailableSize(store.getState().availableSize))
+    }, [store.getState().availableSize.width, store.getState().availableSize.height]);
 
-    render() {
-        return(
-            <section
-                style={{
-                    width:(`${this.props.children.length * 100}%`),
-                    height:(`${this.state.availableSize.height}px`),
-                    overflow: 'hidden',
-                    position: 'absolute',
-                    transition: 'left 0.3s',
-                    left: (`${this.props.activeIndex * -this.state.availableSize.width}px`)
-                }}>
-                {
-                    this.props.children
-                }
-            </section>
-        )
-    }
+    return(
+        <section
+            style={{
+                width:(`${props.children.length * 100}%`),
+                height:(`${availableSize.height}px`),
+                overflow: 'hidden',
+                position: 'absolute',
+                transition: 'left 0.3s',
+                left: (`${props.activeIndex * -availableSize.width}px`)
+            }}>
+            {
+                props.children
+            }
+        </section>
+    )
 }
 
-export class Content extends React.PureComponent{
-    constructor(props) {
-        super(props);
-        this.state = {
-            availableSize: store.getState().availableSize,
-            windowHeight: 0,
-            currentHeight: 0,
-            loading: false,
-            scrollTop: 0
-        }
-        store.subscribe(() => this.setState({
-            availableSize: store.getState().availableSize
-        }))
-    }
+export function Content(props){
 
-    componentDidMount() {
-        const _this = this;
-        this.ref.addEventListener('scroll', () => {
+    const ref = useRef(null);
 
-            this.setState({
-                scrollTop: _this.ref.scrollTop
-            })
+    const [availableSize, setAvailableSize] = useState(store.getState().availableSize);
+    const [scrollHeight, setScrollHeight] = useState(0);
+    const [scrollTop, setScrollTop] = useState(0);
+    const [clientHeight, setClientHeight] = useState(0);
+    const [reachEnd, setReachEnd] = useState(false);
 
-            if(_this.ref.scrollHeight - _this.state.availableSize.height === _this.ref.scrollTop){
-                this.setState({
-                    loading: true
-                })
-            }else{
-                this.setState({
-                    loading: false
-                })
+    useEffect(() => {
+        store.subscribe(() => setAvailableSize(store.getState().availableSize))
+    }, [store.getState().availableSize.width, store.getState().availableSize.height]);
+
+    useEffect(() => {
+        setClientHeight(ref.current.clientHeight);
+    });
+
+    useEffect(() => {
+        ref.current.addEventListener('scroll', () => {
+            setScrollTop(ref.current.scrollTop);
+            setScrollHeight(ref.current.scrollHeight);
+
+            if (ref.current.scrollHeight - availableSize.height === ref.current.scrollTop) {
+                setReachEnd(true);
+            } else {
+                setReachEnd(false);
             }
-        })
-    }
+        }, false);
+    })
 
-    render(){
-        return(
+    return(
+        <section
+            style={{
+                width: availableSize.width+'px',
+                height: availableSize.height+'px',
+                float: "left",
+                overflow: 'hidden',
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                alignContent: 'flex-start',
+            }}
+        >
             <section
+                ref={ref}
+                className='recommend-item-wrapper'
                 style={{
-                    width: this.state.availableSize.width+'px',
-                    height: this.state.availableSize.height+'px',
-                    float: "left",
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    alignContent: 'flex-start',
+                    width: availableSize.width+'px',
+                    height: availableSize.height+'px',
                 }}
             >
-                <section
-                    ref={ref => this.ref = ref}
-                    className='recommend-item-wrapper'
-                    style={{
-                        width: this.state.availableSize.width+'px',
-                        height: this.state.availableSize.height+'px',
-                    }}
-                >
-                    {
-                        React.Children.map(this.props.children, (child) => {
-                            if (!React.isValidElement(child)) {
-                                return null
-                            }
-                            const childProps = {
-                                ...child.props,
-                                loading: this.state.loading,
-                                position: this.state.scrollTop
-                            }
-                            return React.cloneElement(child, childProps)
-                        })
-                    }
-                </section>
+                {
+                    React.Children.map(props.children, (child) => {
+                        if (!React.isValidElement(child)) {
+                            return null;
+                        }
+                        const childProps = {
+                            ...child.props,
+                            loading: reachEnd,
+                            clientData: {scrollTop, clientHeight}
+                        }
+                        return React.cloneElement(child, childProps)
+                    })
+                }
             </section>
-        )
-    }
+        </section>
+    )
 }

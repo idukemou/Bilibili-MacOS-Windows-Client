@@ -8,26 +8,10 @@ import store from '../../redux/store'
 import {countAvailableClientHeightAction} from "../../redux/actionCreators";
 
 const menuList = [
-    {
-        name: '首页',
-        href: '/app',
-        icon: 'icon-shouye'
-    },
-    {
-        name: '分区',
-        href: '/category',
-        icon: 'icon-category'
-    },
-    {
-        name: '动态',
-        href: '/news',
-        icon: 'icon-dongtai'
-    },
-    {
-        name: '我的',
-        href: '/user',
-        icon: 'icon-bilibili-line'
-    }
+    {name: '首页', href: '/app', icon: 'icon-shouye'},
+    {name: '分区', href: '/category', icon: 'icon-category'},
+    {name: '动态', href: '/news', icon: 'icon-dongtai'},
+    {name: '我的', href: '/user', icon: 'icon-bilibili-line'}
 ]
 
 export default class Layout extends React.Component{

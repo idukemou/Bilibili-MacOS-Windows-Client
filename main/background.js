@@ -7,6 +7,7 @@ import { getRecommendList } from "../apis/index_page_api";
 
 
 const isProd = process.env.NODE_ENV === 'production';
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 if (isProd) {
   serve({ directory: 'app' });
@@ -36,6 +37,8 @@ if (isProd) {
   }
 })();
 
+
+
 app.on('window-all-closed', () => {
   app.quit();
 });
@@ -54,8 +57,8 @@ ipcMain.on('request_recommend_list', async (event, data) => {
 })
 
 ipcMain.handle('request_recommend_list_append', async (event, data) => {
-  console.log("客户端接受到了");
+  console.log("requesting data begin");
   const result = await getRecommendList();
-  console.log("客户端返回了");
+  console.log('requesting data end');
   return result;
 })

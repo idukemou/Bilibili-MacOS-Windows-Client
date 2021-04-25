@@ -2,7 +2,7 @@ import {
     AVAILABLE_SIZE,
     GET_COUNTRY_LIST,
     GET_CATEGORY_LIST,
-    GET_RECOMMEND_LIST,
+    GET_RECOMMEND_LIST
 } from "./actionTypes";
 
 

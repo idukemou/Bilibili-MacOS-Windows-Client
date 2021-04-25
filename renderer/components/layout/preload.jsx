@@ -1,6 +1,5 @@
 import {useState, useEffect} from "react";
 import '../../styles/preload.css';
-import {message} from "antd";
 
 export default function Preload(){
 
