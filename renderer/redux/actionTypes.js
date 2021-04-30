@@ -1,5 +1,9 @@
 /* App Actions */
 export const AVAILABLE_SIZE = 'AVAILABLE_SIZE';
+export const PLAY_VIDEO_INFO = 'PLAY_VIDEO_INFO';
+export const APPEND_RECOMMEND_LIST = 'APPEND_RECOMMEND_LIST';
+export const PLAY_VIDEO_STATUS = 'PLAY_VIDEO_STATUS';
+export const USER_INFO = 'USER_INFO';
 
 /* API Actions */
 export const GET_COUNTRY_LIST = 'GET_COUNTRY_LIST';

@@ -41,7 +41,7 @@ export function Content(props){
 
     useEffect(() => {
         setClientHeight(ref.current.clientHeight);
-    });
+    }, [store.getState().availableSize]);
 
     useEffect(() => {
         ref.current.addEventListener('scroll', () => {

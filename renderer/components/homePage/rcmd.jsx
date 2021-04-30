@@ -1,7 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import store from "../../redux/store";
 import electron from 'electron';
-import { getRecommendListAction } from "../../redux/actionCreators";
+import {
+    getRecommendListAction,
+    playVideoInfoAction,
+    appendRecommendListAction,
+    platVideoStatusAction
+} from "../../redux/actionCreators";
 import { convertDuration, convertViews } from "../../utils/utils";
 
 const ipcRenderer = electron.ipcRenderer || false;
@@ -23,15 +28,18 @@ if(ipcRenderer){
 function RecommendUI(props){
 
     const box = useRef(null);
+    const data = props.videoInfo;
+    const interval = 1;
+
     const [offsetTop, setOffsetTop] = useState(0);
     const [display, setDisplay] = useState(true);
 
-
     useEffect(() => {
-        if((props.clientData.scrollTop - offsetTop > 0) || (offsetTop - (240) - props.clientData.scrollTop > props.clientData.clientHeight)){
+
+        if( (props.clientData.scrollTop - offsetTop * interval > 0) || (offsetTop - (240 * interval) - props.clientData.scrollTop > props.clientData.clientHeight) ){
             setDisplay(false);
         }else{
-            setDisplay(true);
+            setDisplay(true)
         }
     });
 
@@ -39,10 +47,24 @@ function RecommendUI(props){
         setOffsetTop(box.current.offsetTop + 220);
     }, [offsetTop]);
 
-    const data = props.videoInfo;
 
+    function playVideo(bvid){
+
+        ipcRenderer.send('request_video_play_info', bvid);
+        ipcRenderer.once('fetch_video_play_info', async (event, data) => {
+            store.dispatch(await playVideoInfoAction(data));
+        })
+
+        store.dispatch(platVideoStatusAction(true));
+        ipcRenderer.removeAllListeners('request_video_play_info');
+    }
+
+
+    /**
+     * return UI Component
+     */
     return(
-        <div className='rcmd-item' ref={box}>
+        <div className='rcmd-item' ref={box} onClick={() => playVideo(data.bvid)}>
             <div className={'rcmd-item-wrapper'} style={{display: (display ? 'block': 'none')}}>
                 <div className='rcmd-item-info-wrapper'>
                     <img src={data.pic} alt={data.title} className='rcmd-item-image' />
@@ -73,32 +95,48 @@ function RecommendUI(props){
 export default function Recommend(props){
 
     const [recommendList, setRecommendList] = useState(store.getState().recommendList);
-    const [counter, setCounter] = useState(0);
+    const [locker, setLocker] = useState(false);
 
+    /**
+     * Effect for update value of commendList
+     */
     useEffect(() => {
         store.subscribe(() => {
             setRecommendList(store.getState().recommendList);
         });
     }, [store.getState().recommendList]);
 
+
+    /**
+     * Effect for update value of loading
+     */
     useEffect(() => {
-        if(props.loading && counter <= 20){
+        if(props.loading && !locker){
             loadMore();
-            console.log('rcmd.js.75 =====> loadMore');
-            setCounter(counter+1);
+            setLocker(false);
         }
     }, [props.loading]);
 
+
+    /**
+     * request more data from API
+     */
     function loadMore(){
+        setLocker(true);
         if(ipcRenderer){
             ipcRenderer.invoke('request_recommend_list_append')
                 .then(data => {
                     const temp = recommendList.concat(data.item);
-                    setRecommendList(temp);
+                    // setRecommendList(temp);
+                    store.dispatch(appendRecommendListAction(temp));
                 });
         }
     }
 
+
+    /**
+     * return UI Components
+     */
     return(
         <>
             {

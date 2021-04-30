@@ -2,7 +2,11 @@ import {
     AVAILABLE_SIZE,
     GET_COUNTRY_LIST,
     GET_CATEGORY_LIST,
-    GET_RECOMMEND_LIST
+    GET_RECOMMEND_LIST,
+    APPEND_RECOMMEND_LIST,
+    PLAY_VIDEO_INFO,
+    PLAY_VIDEO_STATUS,
+    USER_INFO
 } from "./actionTypes";
 
 
@@ -24,4 +28,24 @@ export const getCategoryListAction = (categoryList) => ({
 export const getRecommendListAction = (recommendList) => ({
     type: GET_RECOMMEND_LIST,
     recommendList
+})
+
+export const appendRecommendListAction = (recommendList) => ({
+    type: APPEND_RECOMMEND_LIST,
+    recommendList
+})
+
+export const playVideoInfoAction = (videoPlayInfo) => ({
+    type: PLAY_VIDEO_INFO,
+    videoPlayInfo
+})
+
+export const platVideoStatusAction = (status) => ({
+    type: PLAY_VIDEO_STATUS,
+    status
+})
+
+export const getUserInfoAction = (profile) => ({
+    type: USER_INFO,
+    profile
 })

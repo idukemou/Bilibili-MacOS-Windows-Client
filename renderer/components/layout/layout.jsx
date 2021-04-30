@@ -5,7 +5,16 @@ import Category from "../categoryPage/category";
 import News from "../newsPage/news";
 import User from "../userPage/user";
 import store from '../../redux/store'
-import {countAvailableClientHeightAction} from "../../redux/actionCreators";
+import {countAvailableClientHeightAction, getUserInfoAction} from "../../redux/actionCreators";
+import electron from 'electron';
+
+const ipcRenderer = electron.ipcRenderer || false;
+if(ipcRenderer){
+    ipcRenderer.invoke('request_is_user_login')
+        .then((data) => {
+            store.dispatch(getUserInfoAction(data));
+        })
+}
 
 const menuList = [
     {name: '首页', href: '/app', icon: 'icon-shouye'},
@@ -130,7 +139,7 @@ export default class Layout extends React.Component{
                                     key={menu.href}
                                     onClick={() => this.handleChangePage(menu.href)}
                                 >
-                                    <i className={`iconfont ${menu.icon} layout-navigation-icon`}></i>
+                                    <i className={`iconfont ${menu.icon} layout-navigation-icon`} />
                                     <span>{menu.name}</span>
                                 </a>
                             ))
