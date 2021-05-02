@@ -74,12 +74,19 @@ function Video(props){
         }
     }
 
+    function player_specificTime(){
+        if(flvPlayer !== null){
+            flvPlayer.currentTime = flvPlayer.currentTime + 10;
+        }
+    }
+
     return(
         <div style={{width:640, height:480, border: '1px solid #000'}}>
             <video id='playerContainer' width='640px' height='480px' controls={true}></video>
             <button onClick={() => player_start()}>play</button>
             <button onClick={() => player_pause()}>pause</button>
             <button onClick={() => player_destroy()}>destroy</button>
+            <button onClick={() => player_specificTime()}>10秒</button>
         </div>
     )
 }

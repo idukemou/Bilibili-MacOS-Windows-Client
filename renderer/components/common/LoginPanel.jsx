@@ -246,6 +246,7 @@ export default function LoginPanel(props){
                         ipcRenderer.invoke('request_is_user_login')
                             .then((data) => {
                                 store.dispatch(getUserInfoAction(data));
+                                props.setRefreshPage('login');
                             })
                     }
                     closePenal();

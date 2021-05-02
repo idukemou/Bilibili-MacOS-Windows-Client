@@ -108,8 +108,7 @@ async function sendCaptchaCode(args){
         })
     })
         .then(res => {
-            const result = res.data;
-            data = result;
+            data = res.data;
         })
 
     return data;
@@ -134,11 +133,21 @@ async function userLoginWithSmscode(args){
     })
         .then(res => {
             const result = res.data;
-
             data = result.data;
         })
 
     return data;
+}
+
+function userLogout(){
+    return new Promise((resolve) => {
+        fs.writeFile(cookieJar, '', () => {
+            resolve({
+                code: 0,
+                message: '退出成功'
+            })
+        })
+    });
 }
 
 
@@ -171,6 +180,7 @@ export {
     userLoginWithSmscode,
     sendCaptchaCode,
     isUserLogin,
+    userLogout,
     getCaptchaToken,
     getCountryList
 }

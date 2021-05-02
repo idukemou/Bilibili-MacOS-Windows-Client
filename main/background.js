@@ -5,11 +5,12 @@ import {
   getCaptchaToken,
   getCountryList,
   isUserLogin,
-  sendCaptchaCode, userLoginWithSmscode,
+  sendCaptchaCode, userLoginWithSmscode, userLogout,
   validateCaptchaCode
 } from "../apis/user_login_api";
 import { getCategoryList } from "../apis/category_list_api";
 import { getRecommendList, getVideoPlayInfo } from "../apis/index_page_api";
+import {getViewHistory} from "../apis/user_based_feature_api";
 // const disk = require("diskusage");
 // const os = require("os");
 //
@@ -127,6 +128,16 @@ ipcMain.handle("request_user_login", async (event, data) => {
 })
 
 ipcMain.handle("request_is_user_login", async (event, data) => {
-  log('starting requesting is user login');
+  log('start requesting is user login');
   return await isUserLogin();
+})
+
+ipcMain.handle("request_user_logout", async (event, data) => {
+  log('start requesting user logout');
+  return await userLogout();
+})
+
+ipcMain.handle("get_view_history", async (event, data) => {
+  log('start getting view history');
+  return await getViewHistory();
 })
