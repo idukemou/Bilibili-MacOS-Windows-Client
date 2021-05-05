@@ -10,7 +10,7 @@ export default function SearchBarBtn(props){
     return(
         <>
             <button className='search-bar-btn-container' onClick={() => setPageStatus(!pageStatus)}>
-                <i className="iconfont icon-search"></i>
+                <i className="iconfont icon-search" />
                 <span>{placeholder}</span>
             </button>
 

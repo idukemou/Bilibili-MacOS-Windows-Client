@@ -6,11 +6,13 @@ import {
   getCountryList,
   isUserLogin,
   sendCaptchaCode, userLoginWithSmscode, userLogout,
-  validateCaptchaCode
 } from "../apis/user_login_api";
 import { getCategoryList } from "../apis/category_list_api";
 import { getRecommendList, getVideoPlayInfo } from "../apis/index_page_api";
 import {getViewHistory} from "../apis/user_based_feature_api";
+import {getVideoRelatedTags, getVideoSuggestions} from "../apis/video_related_api";
+import {getSearchHotWords, getSearchSuggestWords} from "../apis/search_page_api";
+import {event} from "next/dist/build/output/log";
 // const disk = require("diskusage");
 // const os = require("os");
 //
@@ -140,4 +142,24 @@ ipcMain.handle("request_user_logout", async (event, data) => {
 ipcMain.handle("get_view_history", async (event, data) => {
   log('start getting view history');
   return await getViewHistory();
+})
+
+ipcMain.handle("get_video_related_tags", async(event, data) => {
+  log("start getting video related tags");
+  return await getVideoRelatedTags(data);
+})
+
+ipcMain.handle("get_video_suggest_videos", async(event, data) => {
+  log("start getting video related suggestions");
+  return await getVideoSuggestions(data);
+})
+
+ipcMain.handle("get_search_hot_words", async (event, data) => {
+  log("start getting search hot words");
+  return await getSearchHotWords();
+});
+
+ipcMain.handle("get_search_suggest_words", async (event, data) => {
+  log("start getting search suggest words");
+  return await getSearchSuggestWords(data);
 })

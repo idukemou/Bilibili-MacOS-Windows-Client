@@ -16,7 +16,7 @@
 
 *   [首页](https://github.com/yj369/Bilibili-MacOS-Windows-Client/tree/main/renderer/components/homePage) 
     *   直播
-    *   [推荐](https://github.com/yj369/Bilibili-MacOS-Windows-Client/blob/main/renderer/components/homePage/rcmd.jsx) <img src="https://img.shields.io/static/v1?label=status&message=working&color=important"/>
+    *   [推荐](https://github.com/yj369/Bilibili-MacOS-Windows-Client/blob/main/renderer/components/homePage/rcmd.jsx) <img src="https://img.shields.io/static/v1?label=status&message=done&color=green"/>
     *   热门
     *   电影
     *   电视剧
@@ -25,11 +25,37 @@
     *   热门
     *   关注
 *   [我的](https://github.com/yj369/Bilibili-MacOS-Windows-Client/tree/main/renderer/components/userPage)
-*   [搜索](https://github.com/yj369/Bilibili-MacOS-Windows-Client/tree/main/renderer/components/searchPage)
-*   视频播放页
+    *   历史记录 <img src="https://img.shields.io/static/v1?label=status&message=working&color=important"/>
+    *   离线缓存
+    *   我的收藏 <img src="https://img.shields.io/static/v1?label=status&message=working&color=important"/>
+    *   我的关注
+    *   我的消息
+    *   搜后再看
+    *   我的钱包
+    *   设置
+*   [搜索](https://github.com/yj369/Bilibili-MacOS-Windows-Client/tree/main/renderer/components/searchPage)<img src="https://img.shields.io/static/v1?label=status&message=working&color=important"/>
+*   视频播放页 <img src="https://img.shields.io/static/v1?label=status&message=working&color=important"/>
+    *   视频播放器 <img src="https://img.shields.io/static/v1?label=status&message=working&color=important"/>
+    *   视频简介&相关视频 <img src="https://img.shields.io/static/v1?label=status&message=working&color=important"/>
+    *   评价
 *   直播间页面
 
 ## 项目进度
+
+### 2021-05-05
+
+*   搜索页面框架完成
+    *   添加并完成搜索热词功能
+    *   添加并完成搜索推荐词功能
+    *   添加搜索结果页
+*   视频播放页面框架完成
+    *   添加并初步实现视频播放器组件
+    *   添加并完成视频简介信息框架
+    *   添加并完成相关视频推荐模块
+    *   添加并完成视频tags模块
+    *   添加视频评价模块
+*   短信登录&注册功能完成
+    *   添加并实现历史记录调取
 
 ### 2021-04-25
 

@@ -96,6 +96,7 @@ export default function Recommend(props){
 
     const [recommendList, setRecommendList] = useState(store.getState().recommendList);
     const [locker, setLocker] = useState(false);
+    const [counter, setCounter] = useState(0);
 
     /**
      * Effect for update value of commendList
@@ -111,9 +112,10 @@ export default function Recommend(props){
      * Effect for update value of loading
      */
     useEffect(() => {
-        if(props.loading && !locker){
+        if(props.loading && !locker && counter < 10){
             loadMore();
             setLocker(false);
+            setCounter(counter + 1);
         }
     }, [props.loading]);
 

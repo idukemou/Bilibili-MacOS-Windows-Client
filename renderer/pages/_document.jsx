@@ -6,14 +6,14 @@ export default class MyDocument extends Document {
             <Html>
             <Head>
                 <meta charSet='utf-8' />
-                <link rel="stylesheet" href="https://at.alicdn.com/t/font_2503344_e1yho21wrpv.css"/>
+                <link rel="stylesheet" href="https://at.alicdn.com/t/font_2503344_ssacli0ykfa.css"/>
                 <meta name="referrer" content="no-referrer" />
             </Head>
             <body>
                 <Main />
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.2/flv.min.js"
-                        integrity="sha512-viIpeG+70da8uvm9aktaT4dXxlalio52xjaKmGSjiUXrfPo4jRlp6elFvAEuV7GxmVB/qwQZiCQNadaF3DfVZg=="
-                        crossOrigin="anonymous" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.5.0/flv.min.js"
+                        integrity="sha512-YY0CZ0d6Wavco6rNJERWAoUJX9jCnRlcwK1MtKon8IzhT189p6rgX7f6ikViiSsv3PLYozgsVJDzdxiVz3IXjw=="
+                        crossOrigin="anonymous"></script>
                 <script src="/js/gt_captcha.js"/>
                 <NextScript />
             </body>

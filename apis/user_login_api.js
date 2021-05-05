@@ -27,8 +27,6 @@ async function isUserLogin(){
             data = result.data;
         })
 
-    console.log(data);
-
     return data;
 }
 

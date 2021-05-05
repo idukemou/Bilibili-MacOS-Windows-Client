@@ -5,11 +5,16 @@ export default function ContentFrame (props){
     const [availableSize, setAvailableSize] = useState(store.getState().availableSize);
 
     useEffect(() => {
-        store.subscribe(() => setAvailableSize(store.getState().availableSize))
+        const unsubscribe = store.subscribe(() => setAvailableSize(store.getState().availableSize))
+
+        return () => {
+            unsubscribe();
+        }
     }, [store.getState().availableSize.width, store.getState().availableSize.height]);
 
     return(
         <section
+            className={props.className}
             style={{
                 width:(`${props.children.length * 100}%`),
                 height:(`${availableSize.height}px`),
@@ -36,7 +41,11 @@ export function Content(props){
     const [reachEnd, setReachEnd] = useState(false);
 
     useEffect(() => {
-        store.subscribe(() => setAvailableSize(store.getState().availableSize))
+        const unsubscribe = store.subscribe(() => setAvailableSize(store.getState().availableSize))
+
+        return () => {
+            unsubscribe();
+        };
     }, [store.getState().availableSize.width, store.getState().availableSize.height]);
 
     useEffect(() => {
@@ -68,6 +77,7 @@ export function Content(props){
                 justifyContent: 'center',
                 alignContent: 'flex-start',
             }}
+            className={props.className}
         >
             <section
                 ref={ref}
