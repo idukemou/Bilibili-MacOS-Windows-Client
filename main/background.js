@@ -11,7 +11,7 @@ import { getCategoryList } from "../apis/category_list_api";
 import { getRecommendList, getVideoPlayInfo } from "../apis/index_page_api";
 import {getViewHistory} from "../apis/user_based_feature_api";
 import {getVideoRelatedTags, getVideoSuggestions} from "../apis/video_related_api";
-import {getSearchHotWords, getSearchSuggestWords} from "../apis/search_page_api";
+import {getSearchHotWords, getSearchResultsByVideo, getSearchSuggestWords} from "../apis/search_page_api";
 import {event} from "next/dist/build/output/log";
 // const disk = require("diskusage");
 // const os = require("os");
@@ -162,4 +162,9 @@ ipcMain.handle("get_search_hot_words", async (event, data) => {
 ipcMain.handle("get_search_suggest_words", async (event, data) => {
   log("start getting search suggest words");
   return await getSearchSuggestWords(data);
+})
+
+ipcMain.handle("get_search_results_by_video", async (event, data) => {
+  log("start getting search results under category video");
+  return await getSearchResultsByVideo(data.keyword, data.page);
 })

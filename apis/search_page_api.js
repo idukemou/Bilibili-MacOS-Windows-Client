@@ -43,3 +43,15 @@ export async function getSearchSuggestWords(keyword){
 
     return data;
 }
+
+export async function getSearchResultsByVideo(keyword, page) {
+    const cmd = encodeURI(`https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=${keyword}&page=${page}`);
+
+    let data = null;
+    await curly.get(cmd)
+        .then(res => {
+            data = res.data;
+        })
+
+    return data;
+}

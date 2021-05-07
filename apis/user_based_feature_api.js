@@ -2,7 +2,7 @@ const {curly} = require('node-libcurl');
 const path = require('path');
 const cookieJar = path.join(__dirname, '/cookie/cookiejar.txt');
 
-async function getViewHistory(){
+export async function getViewHistory(){
     const cmd = "https://api.bilibili.com/x/web-interface/history/cursor?ps=20";
     let data = null;
 
@@ -12,17 +12,8 @@ async function getViewHistory(){
     })
         .then(res => {
             const result = res.data;
-
-            if(result.code !== 0){
-                data = result;
-            }
-
-            data = result.data;
+            data = result;
         })
 
     return data;
-}
-
-export {
-    getViewHistory
 }

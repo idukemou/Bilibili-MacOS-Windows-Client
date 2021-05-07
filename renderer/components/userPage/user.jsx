@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import LoginPanel from "../common/LoginPanel";
-import {Button, message} from 'antd';
+import {Button, Checkbox, message} from 'antd';
 import store from "../../redux/store";
 import electron from 'electron';
 import {getUserInfoAction, platVideoStatusAction, playVideoInfoAction} from "../../redux/actionCreators";
@@ -104,6 +104,7 @@ function UserProfile(props){
  */
 function MyViewHistory(props){
 
+    const [enabledEdit, setEnabledEdit] = useState(false);
     const [viwHistoryStatus, setViewHistoryStatus] = useState(true);
     const [viewHistory, setViewHistory] = useState({
         "cursor": {},
@@ -115,40 +116,65 @@ function MyViewHistory(props){
         if(viwHistoryStatus && ipcRenderer){
             ipcRenderer.invoke('get_view_history')
                 .then((res) => {
-                    setViewHistory(res);
-                    setViewHistoryStatus(false);
+                    if(res.code === 0){
+                        setViewHistory(res.data);
+                        setViewHistoryStatus(false);
+                    }
                 })
         }
     },[]);
 
-    function playVideo(bvid){
-        ipcRenderer.send('request_video_play_info', bvid);
-        ipcRenderer.once('fetch_video_play_info', async (event, data) => {
-            store.dispatch(await playVideoInfoAction(data));
-        })
-        store.dispatch(platVideoStatusAction(true));
-        ipcRenderer.removeAllListeners('request_video_play_info');
+    function playVideo(e, bvid){
+
+        console.log(e.target.className === "view-history-selector");
+
+        // ipcRenderer.send('request_video_play_info', bvid);
+        // ipcRenderer.once('fetch_video_play_info', async (event, data) => {
+        //     store.dispatch(await playVideoInfoAction(data));
+        // })
+        // store.dispatch(platVideoStatusAction(true));
+        // ipcRenderer.removeAllListeners('request_video_play_info');
     }
+
+    function checkSingleViewHistory(e){
+        e.preventDefault();
+        console.log(e);
+    }
+
+    function checkAllViewHistory(e){
+        console.log(e)
+    }
+
 
     return (
         <div id="user-content-wrapper">
             <div className="user-content-header">
-                <Header center={<span>{props.active.name}</span>}/>
+                <Header
+                    left={enabledEdit && <div>
+                        <button disabled={true}>删除</button>
+                        <Checkbox.Group onChange={() => checkAllViewHistory()}>
+                            <button>全选</button>
+                        </Checkbox.Group>
+                    </div>}
+                    center={<span>{props.active.name}</span>}
+                    right={<button onClick={() => setEnabledEdit(!enabledEdit)}>{enabledEdit ? "取消": "编辑"}</button>}
+                />
             </div>
 
             <div className="user-content">
                 {
                     viewHistory.list.length !== 0 && viewHistory.list.map((view, index) => (
-                        <div className="view-history-item" key={index} onClick={()=> {view.history.business === 'archive' && playVideo(view.history.bvid)}}>
+                        <div className="view-history-item" key={index} onClick={(e)=> {view.history.business === 'archive' && playVideo(e, view.history.bvid)}}>
                             <div className="view-history-image-wrapper">
-                                <img src={view.cover} alt={view.title}/>
+                                {
+                                    view.history.business === "article-list" ? <img src={view.covers[0]} alt={view.title}/>: <img src={view.cover} alt={view.title}/>
+                                }
+
                                 {
                                     view.history.business === 'archive' &&
                                     <span className="view-duration">
-                                    {
-                                        convertDuration(view.progress !== -1 ? view.progress : view.duration)}/{convertDuration(view.duration)
-                                    }
-                                </span>
+                                        {convertDuration(view.progress !== -1 ? view.progress : view.duration)}  / {convertDuration(view.duration)}
+                                    </span>
                                 }
 
                                 {
@@ -166,6 +192,12 @@ function MyViewHistory(props){
                             <div className="view-history-at">
                                 <span>{convertTime(view.view_at)}</span>
                             </div>
+
+                            {
+                                enabledEdit && <div className="view-history-selector" onClick={(e) => checkSingleViewHistory(e)}>
+                                    <Checkbox value={view.history.bvid} onChange={(e) => checkSingleViewHistory(e)} />
+                                </div>
+                            }
                         </div>
                     ))
                 }

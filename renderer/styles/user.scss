@@ -120,6 +120,16 @@
         border-bottom: 1px solid rgba(0,0,0,0.2);
         float: left;
         margin: 10px calc(2% / 3);
+        cursor: pointer;
+        position: relative;
+
+        &:hover{
+          border-bottom-color: rgb(251, 113, 154);
+
+          .view-history-title{
+            color: rgb(251, 113, 154);
+          }
+        }
 
         .view-history-image-wrapper{
           width: 100%;
@@ -166,6 +176,16 @@
         .view-history-at{
           font-size: 0.75rem;
           color: rgb(174, 174, 175);
+        }
+
+        .view-history-selector{
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: pink;
+          z-index: 101;
         }
       }
     }
