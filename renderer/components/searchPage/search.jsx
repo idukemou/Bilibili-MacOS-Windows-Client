@@ -1,9 +1,10 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Header from "../layout/header";
 import {Button, Input} from "antd";
 import '../../styles/search.css';
 import electron from "electron";
 import ContentFrame, {Content} from "../layout/contentFrame";
+import SearchResultByComposition from "./SearchResultByComponents";
 
 const ipcRenderer = electron.ipcRenderer || false;
 
@@ -81,7 +82,7 @@ export default function Search(props){
         }, 300));
     }
 
-    function searchKeyword(keyword){
+    function searchKeyword(keyword, page){
         setValue(keyword);
         setShowSuggestWords(false);
         setSuggestWords([]);
@@ -89,11 +90,11 @@ export default function Search(props){
         setShowSearchResult(true);
 
         if(ipcRenderer){
-            ipcRenderer.invoke('get_search_results_by_video', {keyword: keyword, page: 1})
+            ipcRenderer.invoke('get_search_results_by_video', {keyword: keyword, page: page})
                 .then((res) => {
                     if(res.code === 0){
-                        setSearchResult(res.data.result);
-                        console.log(res.data.result);
+                        const newData = searchResult.concat(res.data.result);
+                        setSearchResult(newData);
                     }
                 })
         }
@@ -107,7 +108,7 @@ export default function Search(props){
                         id='search-bar'
                         placeholder="搜索视频、番剧或up主"
                         prefix={<i className='iconfont icon-search'/>}
-                        onPressEnter={() => searchKeyword(value)}
+                        onPressEnter={() => searchKeyword(value, 1)}
                         onChange={(e) => handleWordChange(e)}
                         ref={searchRef}
                         value={value}
@@ -135,7 +136,7 @@ export default function Search(props){
                     <div className="search-page-default-content">
                         {
                             hotWords.map((word, index) => (
-                                <button key={index} className="search-page-hot-word-item" onClick={() => searchKeyword(word.keyword)}>
+                                <button key={index} className="search-page-hot-word-item" onClick={() => searchKeyword(word.keyword, 1)}>
                                     <span>{word.keyword}</span>
                                 </button>
                             ))
@@ -158,7 +159,7 @@ export default function Search(props){
                 showSuggestWords && <div className="search-page-suggest-words">
                     {
                         suggestWords !== undefined && suggestWords.map((suggest, index) => (
-                            <div className="search-page-suggest-word" key={index} onClick={() => searchKeyword(suggest.value)}>
+                            <div className="search-page-suggest-word" key={index} onClick={() => searchKeyword(suggest.value, 1)}>
                                 <i className="iconfont icon-search"/>
                                 <span dangerouslySetInnerHTML={{__html:suggest.name}} /><br/>
                             </div>
@@ -168,11 +169,30 @@ export default function Search(props){
             }
 
             {
-                showSearchResult && <div className="search-page-suggest-words">
+                showSearchResult &&
+                <div id="search-page-result-container">
+                    <Header
+                        left={
+                            <>
+                                <span>综合</span>
+                                <span>番剧(0)</span>
+                                <span>直播(0)</span>
+                                <span>用户(0)</span>
+                                <span>影视(0)</span>
+                            </>
+                        }
+                    />
+
+                    <ContentFrame>
+                        <Content>
+                            <SearchResultByComposition searchResult={searchResult} value={value} searchKeyword={searchKeyword}/>
+                        </Content>
+                    </ContentFrame>
+
                     {
-                        searchResult !== undefined && searchResult.map((result, index) => (
-                            <span key={index}>{result.title}<br/></span>
-                        ))
+                        searchResult !== undefined && (
+                            searchResult.length <= 0 && <span>加载数据中...</span>
+                        )
                     }
                 </div>
             }

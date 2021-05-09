@@ -1,9 +1,40 @@
+import readline from "readline";
+import {COOKIEJAR}  from './file_manager';
+
 const {curly} = require("node-libcurl");
 const querystring = require("querystring");
 const {session} = require("electron");
 const path = require('path');
 const fs = require('fs');
-const cookieJar = path.join(__dirname, '/cookie/cookiejar.txt');
+
+export function parseCookieJarFile(){
+    let cookieText = "";
+    const exp = /(SESSDATA|bili_jct)(\s+)(.+)/ig;
+    const cookieMap = new Map();
+
+    return new Promise(resolve => {
+        const file = readline.createInterface({
+            input: fs.createReadStream(COOKIEJAR),
+            output: process.stdout,
+            terminal: false
+        })
+
+        file.on('line', (line) => {
+            cookieText = cookieText + line + '\n';
+        });
+
+        file.on('close', () => {
+            const results = cookieText.match(exp);
+
+            for(let result of results){
+                const res = result.split(/\s+/);
+                cookieMap[res[0]] = res[1];
+            }
+
+            resolve(cookieMap);
+        });
+    })
+}
 
 /**
  * Check if user has login.
@@ -14,8 +45,8 @@ async function isUserLogin(){
     let data = null;
 
     await curly.get(cmd, {
-        COOKIEJAR: cookieJar,
-        COOKIEFILE: cookieJar
+        COOKIEJAR: COOKIEJAR,
+        COOKIEFILE: COOKIEJAR
     })
         .then(res => {
             const result = res.data;
@@ -121,8 +152,8 @@ async function userLoginWithSmscode(args){
     await curly.post(cmd, {
         VERBOSE: true,
         FOLLOWLOCATION: true,
-        COOKIEFILE: cookieJar,
-        COOKIEJAR: cookieJar,
+        COOKIEFILE: COOKIEJAR,
+        COOKIEJAR: COOKIEJAR,
         postFields: querystring.stringify({
             "cid": cid,
             "tel": tel,
@@ -139,7 +170,7 @@ async function userLoginWithSmscode(args){
 
 function userLogout(){
     return new Promise((resolve) => {
-        fs.writeFile(cookieJar, '', () => {
+        fs.writeFile(COOKIEJAR, '', () => {
             resolve({
                 code: 0,
                 message: '退出成功'
@@ -149,32 +180,7 @@ function userLogout(){
 }
 
 
-function sessionTest(){
-    console.log("====session====");
-    session.defaultSession.cookies.get({})
-        .then((cookies) => {
-            console.log(cookies);
-        });
-}
-
-function setCookie(name, value){
-    const cookie = {
-        url: 'https://www.bilibili.com',
-        name,
-        value
-    };
-
-    session.defaultSession.cookies.set(cookie)
-        .then(() => {
-            console.log('set cookie successfully');
-        });
-}
-
-
-
 export {
-    setCookie,
-    sessionTest,
     userLoginWithSmscode,
     sendCaptchaCode,
     isUserLogin,

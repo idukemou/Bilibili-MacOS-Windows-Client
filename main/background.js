@@ -4,15 +4,16 @@ import { createWindow } from './helpers';
 import {
   getCaptchaToken,
   getCountryList,
-  isUserLogin,
+  isUserLogin, parseCookieJarFile,
   sendCaptchaCode, userLoginWithSmscode, userLogout,
 } from "../apis/user_login_api";
 import { getCategoryList } from "../apis/category_list_api";
 import { getRecommendList, getVideoPlayInfo } from "../apis/index_page_api";
-import {getViewHistory} from "../apis/user_based_feature_api";
-import {getVideoRelatedTags, getVideoSuggestions} from "../apis/video_related_api";
+import {getViewHistory, getViewLater} from "../apis/user_based_feature_api";
+import {getVideoRelatedTags, getVideoSuggestions, updateVideoPlayProgress} from "../apis/video_related_api";
 import {getSearchHotWords, getSearchResultsByVideo, getSearchSuggestWords} from "../apis/search_page_api";
-import {event} from "next/dist/build/output/log";
+import {program_init} from "../apis/file_manager";
+
 // const disk = require("diskusage");
 // const os = require("os");
 //
@@ -31,7 +32,6 @@ import {event} from "next/dist/build/output/log";
 
 
 
-
 const isProd = process.env.NODE_ENV === 'production';
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
@@ -43,6 +43,8 @@ if (isProd) {
 
 (async () => {
   await app.whenReady();
+
+  program_init(); // create app initial folder and files
 
   const mainWindow = createWindow('main', {
     width: 1000,
@@ -139,9 +141,9 @@ ipcMain.handle("request_user_logout", async (event, data) => {
   return await userLogout();
 })
 
-ipcMain.handle("get_view_history", async (event, data) => {
+ipcMain.handle("get_view_history", async (event, page) => {
   log('start getting view history');
-  return await getViewHistory();
+  return await getViewHistory(page);
 })
 
 ipcMain.handle("get_video_related_tags", async(event, data) => {
@@ -167,4 +169,14 @@ ipcMain.handle("get_search_suggest_words", async (event, data) => {
 ipcMain.handle("get_search_results_by_video", async (event, data) => {
   log("start getting search results under category video");
   return await getSearchResultsByVideo(data.keyword, data.page);
+})
+
+ipcMain.handle("update_video_play_progress", async (event, data) => {
+  log('start updating the video play progress');
+  return await updateVideoPlayProgress(data.aid, data.cid, data.progress);
+})
+
+ipcMain.handle("get_view_later", async (event, data) => {
+  log('start getting view later list');
+  return await getViewLater();
 })

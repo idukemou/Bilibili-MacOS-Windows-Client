@@ -9,6 +9,12 @@ import electron from "electron";
 
 const ipcRenderer = electron.ipcRenderer || false;
 
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function MediaPlayer(props){
     const progressRef = useRef(null);
     const playerRef = useRef(null);
@@ -337,6 +343,12 @@ function MediaPlayer(props){
 }
 
 
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function MediaInfo(props){
 
     const [active, setActive] = useState(0);
@@ -381,6 +393,12 @@ function MediaInfo(props){
     )
 }
 
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function BriefIntro(props){
 
     const [tags, setTags] = useState([]);
@@ -559,6 +577,12 @@ function BriefIntro(props){
     )
 }
 
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function VideoReviews(props){
     return(
         <span>reviews</span>
@@ -578,6 +602,17 @@ export default function VideoDetail(props){
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
+
+        if(JSON.stringify(videoInfo) !== '{}'){
+            if(ipcRenderer){
+                ipcRenderer.invoke('update_video_play_progress', {
+                    aid: videoInfo.aid,
+                    cid: videoInfo.cid,
+                    progress: 100,
+                }).then(res => {})
+            }
+        }
+
         setVideoInfo({});
         store.subscribe(() => {
             if(JSON.stringify(store.getState().videoInfo.info) !== '{}'){
@@ -594,7 +629,16 @@ export default function VideoDetail(props){
 
 
     function exitVideo(){
-        setVideoInfo({});
+        if(JSON.stringify(videoInfo) !== '{}'){
+            if(ipcRenderer){
+                ipcRenderer.invoke('update_video_play_progress', {
+                    aid: videoInfo.aid,
+                    cid: videoInfo.cid,
+                    progress: 100,
+                }).then(res => {})
+            }
+        }
+
         store.dispatch(platVideoStatusAction(false));
         store.dispatch(playVideoInfoAction({
             url: {},

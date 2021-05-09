@@ -1,14 +1,14 @@
 const {curly} = require("node-libcurl");
 const path = require("path");
-const cookieJar = path.join(__dirname, '/cookie/cookiejar.txt');
+import {COOKIEJAR}  from './file_manager';
 
 async function getRecommendList(){
     let cmd = "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3";
     let data = "";
 
     await curly.get(cmd, {
-        COOKIEJAR: cookieJar,
-        COOKIEFILE: cookieJar
+        COOKIEJAR: COOKIEJAR,
+        COOKIEFILE: COOKIEJAR
     })
         .then((res) => {
             const result = res.data;

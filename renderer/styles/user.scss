@@ -109,6 +109,9 @@
       padding: 10px;
       overflow: scroll;
 
+      .no-padding{
+        justify-content: flex-start;
+      }
 
       &::-webkit-scrollbar{
         display: none;
@@ -178,14 +181,15 @@
           color: rgb(174, 174, 175);
         }
 
-        .view-history-selector{
+        label.view-history-selector{
+          display: block;
           position: absolute;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: pink;
           z-index: 101;
+          cursor: pointer;
         }
       }
     }

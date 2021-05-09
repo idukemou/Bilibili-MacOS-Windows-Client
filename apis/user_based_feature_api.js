@@ -1,18 +1,31 @@
 const {curly} = require('node-libcurl');
-const path = require('path');
-const cookieJar = path.join(__dirname, '/cookie/cookiejar.txt');
+import {COOKIEJAR} from './file_manager';
 
-export async function getViewHistory(){
-    const cmd = "https://api.bilibili.com/x/web-interface/history/cursor?ps=20";
+export async function getViewHistory(page){
+    const cmd = `https://api.bilibili.com/x/v2/history?ps=20&pn=${page}`;
     let data = null;
 
     await curly.get(cmd, {
-        COOKIEJAR: cookieJar,
-        COOKIEFILE: cookieJar
+        COOKIEJAR: COOKIEJAR,
+        COOKIEFILE: COOKIEJAR
     })
         .then(res => {
-            const result = res.data;
-            data = result;
+            data = res.data;
+        })
+
+    return data;
+}
+
+export async function getViewLater(){
+    const cmd = "https://api.bilibili.com/x/v2/history/toview";
+    let data = null;
+
+    await curly.get(cmd, {
+        COOKIEJAR: COOKIEJAR,
+        COOKIEFILE: COOKIEJAR
+    })
+        .then(res => {
+            data = res.data;
         })
 
     return data;
