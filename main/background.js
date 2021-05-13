@@ -1,4 +1,5 @@
-import { app, ipcMain } from 'electron';
+import { app, ipcMain, session } from 'electron';
+import installExtension, { REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
 import {
@@ -42,7 +43,18 @@ if (isProd) {
 }
 
 (async () => {
-  await app.whenReady();
+  await app.whenReady()
+      .then(() => {
+        installExtension(REACT_DEVELOPER_TOOLS)
+            .then((name) => console.log(`Added Extension:  ${name}`))
+            // .catch((err) => console.log('An error occurred: ', err));
+      })
+      .then(() => {
+        installExtension(REDUX_DEVTOOLS)
+            .then((name) => console.log(`Added Extension:  ${name}`))
+            // .catch((err) => console.log('An error occurred: ', err));
+      })
+
 
   program_init(); // create app initial folder and files
 
@@ -96,9 +108,10 @@ ipcMain.on('request_category_list', async (event, data) => {
   event.sender.send('fetch_category_list', await getCategoryList());
 })
 
-ipcMain.on('request_recommend_list', async (event, data) => {
+
+ipcMain.handle('fetch_recommend_list', async (event, data) => {
   log('start fetching recommend list');
-  event.sender.send('fetch_recommend_list', await getRecommendList());
+  return await getRecommendList();
 })
 
 ipcMain.handle('request_recommend_list_append', async (event, data) => {
@@ -106,9 +119,10 @@ ipcMain.handle('request_recommend_list_append', async (event, data) => {
   return await getRecommendList();
 })
 
-ipcMain.on('request_video_play_info', async (event, bvid) => {
+ipcMain.handle('fetch_video_play_info', async(event, bvid) => {
   log('start fetching video play info');
-  event.sender.send('fetch_video_play_info', await getVideoPlayInfo(bvid))
+  console.log("=======> ", bvid);
+  return await getVideoPlayInfo(bvid);
 })
 
 ipcMain.on('request_video_play_url', async (event, bvid) => {

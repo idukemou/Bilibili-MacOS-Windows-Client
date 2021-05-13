@@ -12,10 +12,10 @@ import { convertDuration, convertViews } from "../../utils/utils";
 const ipcRenderer = electron.ipcRenderer || false;
 
 if(ipcRenderer){
-    ipcRenderer.send('request_recommend_list');
-    ipcRenderer.on('fetch_recommend_list', async (event, data) => {
-        store.dispatch(await getRecommendListAction(data))
-    });
+    ipcRenderer.invoke("fetch_recommend_list")
+        .then(data => {
+            store.dispatch(getRecommendListAction(data))
+        })
 }
 
 
@@ -49,14 +49,13 @@ function RecommendUI(props){
 
 
     function playVideo(bvid){
-
-        ipcRenderer.send('request_video_play_info', bvid);
-        ipcRenderer.once('fetch_video_play_info', async (event, data) => {
-            store.dispatch(await playVideoInfoAction(data));
-        })
-
-        store.dispatch(platVideoStatusAction(true));
-        ipcRenderer.removeAllListeners('request_video_play_info');
+        if(ipcRenderer){
+            ipcRenderer.invoke("fetch_video_play_info", bvid)
+                .then(data => {
+                    store.dispatch(playVideoInfoAction(data))
+                });
+        }
+        store.dispatch(platVideoStatusAction(true))
     }
 
 

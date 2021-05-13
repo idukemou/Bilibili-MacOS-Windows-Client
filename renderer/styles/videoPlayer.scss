@@ -22,7 +22,7 @@
   position: relative;
 
   .media-button{
-    width: 36px;
+    min-width: 36px;
     height: 36px;
     background-color: transparent;
     border: none;
@@ -35,22 +35,12 @@
     }
   }
 
-  div.media-title-wrapper, .media-controls{
-    visibility: hidden;
-  }
-
-  &:hover{
-    div.media-title-wrapper, .media-controls{
-      visibility: visible;
-    }
-  }
-
   div.media-title-wrapper{
     width: 100%;
     height: 60px;
     position: absolute;
     top:0;
-    background-color: rgba(0,0,0,0.3);
+    box-shadow: 0 60px 20px -20px rgba(0,0,0,0.6) inset;
     z-index:100;
     display: flex;
     align-items: center;
@@ -78,9 +68,7 @@
     flex-direction: column;
     align-items: center;
     padding: 25px 0;
-    background-color: rgba(0,0,0,0.1);
-
-
+    box-shadow: 0 -90px 20px -20px rgba(0,0,0,0.6) inset;
 
     div.progress-bar-wrapper, div.media-control-buttons{
       display: flex;
@@ -91,7 +79,23 @@
     div.media-control-buttons{
       width: 100%;
       height: 50px;
-      justify-content: center;
+      justify-content: space-between;
+
+      .media-control-left-section{
+        width: 70%;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .media-control-right-section{
+        width: 30%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
     }
 
     div.progress-bar-wrapper{
@@ -464,6 +468,85 @@
             }
           }
         }
+      }
+    }
+  }
+}
+
+
+#media-feature-frame-container{
+  position: absolute;
+  top:0;
+  left:0;
+  right: 0;
+  height: 563px;
+  z-index: 200;
+
+  .media-feature-frame{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0, 0.6);
+    z-index: 200;
+    transform: translateX(100%);
+  }
+
+  .media-speed-show{
+    animation-name: media-speed-show;
+    animation-fill-mode: forwards;
+    animation-duration: 0.3s;
+  }
+
+  @keyframes media-speed-show {
+    0%{
+      transform: translateX(100%);
+    }
+    100%{
+      transform: translateX(0);
+    }
+  }
+
+  .media-speed-hide{
+    animation-name: media-speed-hide;
+    animation-fill-mode: forwards;
+    animation-duration: 0.3s;
+  }
+
+  @keyframes media-speed-hide {
+    0%{
+      transform: translateX(0);
+    }
+    100%{
+      transform: translateX(100%);
+    }
+  }
+
+  .media-speed{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+
+    button{
+      width: 50px;
+      height: 30px;
+      color: #fff;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      text-align: left;
+      background-color: transparent;
+      transition: all 0.2s;
+      margin: 8px 0;
+
+      &.active{
+        color: rgb(250, 107, 147);
+      }
+
+      &:hover{
+        transform: translateX(-6px);
       }
     }
   }

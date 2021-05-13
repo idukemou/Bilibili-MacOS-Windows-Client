@@ -56,7 +56,7 @@ async function getVideoDetails(bvid){
             }
 
             data = result.data;
-        })
+        });
 
     return data;
 }

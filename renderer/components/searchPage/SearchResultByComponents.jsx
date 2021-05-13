@@ -1,4 +1,9 @@
 import React, {useEffect, useState} from "react";
+import store from "../../redux/store";
+import {platVideoStatusAction, playVideoInfoAction} from "../../redux/actionCreators";
+import electron from "electron";
+
+const ipcRenderer = electron.ipcRenderer || false;
 
 /**
  * Search result component user interface.
@@ -35,11 +40,21 @@ export default function SearchResultByComposition(props){
         }
     }
 
+    function playVideo(bvid){
+        if(ipcRenderer){
+            ipcRenderer.invoke("fetch_video_play_info", bvid)
+                .then(data => {
+                    store.dispatch(playVideoInfoAction(data))
+                });
+        }
+        store.dispatch(platVideoStatusAction(true))
+    }
+
     return (
         <div id="search-page-result-wrapper">
             {
                 searchResult !== undefined && searchResult.map((result, index) => (
-                    <div key={index} className="search-page-result-item">
+                    <div key={index} className="search-page-result-item" onClick={() => playVideo(result.bvid)}>
 
                         <div className='search-page-result-item-wrapper'>
                             <div className='search-page-result-item-info-wrapper'>
