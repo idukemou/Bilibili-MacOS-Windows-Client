@@ -75,7 +75,7 @@ export default function MediaPlayer(props){
             setDuration(0);
             setBufferedTime(0);
         };
-    }, [mediaData]);
+    }, [mediaData.size]);
 
     useEffect(() => {
         if(player !== null){
