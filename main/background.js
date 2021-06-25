@@ -9,9 +9,14 @@ import {
   sendCaptchaCode, userLoginWithSmscode, userLogout,
 } from "../apis/user_login_api";
 import { getCategoryList } from "../apis/category_list_api";
-import { getRecommendList, getVideoPlayInfo } from "../apis/index_page_api";
+import { getRecommendList, getVideoPlayInfo, getVideoFlvUrl, getVideoDetails} from "../apis/index_page_api";
 import {getViewHistory, getViewLater} from "../apis/user_based_feature_api";
-import {getVideoRelatedTags, getVideoSuggestions, updateVideoPlayProgress} from "../apis/video_related_api";
+import {
+  getVideoRelatedTags,
+  getVideoSuggestions,
+  updateVideoPlayProgress,
+  uploadVideoHeartBeat
+} from "../apis/video_related_api";
 import {getSearchHotWords, getSearchResultsByVideo, getSearchSuggestWords} from "../apis/search_page_api";
 import {program_init} from "../apis/file_manager";
 
@@ -121,8 +126,14 @@ ipcMain.handle('request_recommend_list_append', async (event, data) => {
 
 ipcMain.handle('fetch_video_play_info', async(event, bvid) => {
   log('start fetching video play info');
-  console.log("=======> ", bvid);
   return await getVideoPlayInfo(bvid);
+})
+
+ipcMain.handle('request_video_flv_url', async(event, data) => {
+  log('start requesting video flv url');
+  console.log(data);
+  await getVideoDetails(data.bvid);
+  return await getVideoFlvUrl(data.bvid, data.cid);
 })
 
 ipcMain.on('request_video_play_url', async (event, bvid) => {
@@ -188,6 +199,11 @@ ipcMain.handle("get_search_results_by_video", async (event, data) => {
 ipcMain.handle("update_video_play_progress", async (event, data) => {
   log('start updating the video play progress');
   return await updateVideoPlayProgress(data.aid, data.cid, data.progress);
+})
+
+ipcMain.handle('upload_video_heart_beat', async (event, data) => {
+  log('start uploading the video heart beat');
+  return await uploadVideoHeartBeat(data.aid, data.bvid, data.cid, data.progress);
 })
 
 ipcMain.handle("get_view_later", async (event, data) => {

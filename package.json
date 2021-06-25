@@ -22,7 +22,8 @@
     "jsencrypt": "^3.1.0",
     "node-libcurl": "^2.3.2",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "wget-improved": "^3.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",

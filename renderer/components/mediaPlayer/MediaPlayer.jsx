@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import store from "../../redux/store";
 import {convertDuration} from "../../utils/utils";
-import {Popover, Slider} from "antd";
+import {Popover, Slider, message} from "antd";
 
 let controlTimer = 0;
 
@@ -310,19 +310,50 @@ export default function MediaPlayer(props){
         setShowPages(true);
     }
 
+    function addToDownloadList(){
+        const videoInfo = props.videoInfo;
+        const data = {
+            aid: videoInfo.aid,
+            cid: videoInfo.cid,
+            bvid: videoInfo.bvid,
+            tid: videoInfo.tid,
+            pic: videoInfo.pic,
+            owner: videoInfo.owner,
+            title: videoInfo.title,
+            media: mediaData
+        }
+
+        const status = global.MediaHandler.pushTask(data);
+        if(status === 1){
+            message.success('开始缓存');
+        }else if(status === 2){
+            message.info('缓存任务已存在');
+        }else {
+            message.error("添加缓存失败");
+        }
+    }
+
     return(
         <>
             <div className="media-player-container" ref={playerRef}>
 
                 {
                     showControls && <div className="media-title-wrapper">
-                        <button className="media-button media-control-close" onClick={() => close()}>
-                            {
-                                <i className="iconfont icon-back" />
-                            }
-                        </button>
+                        <div className="media-title-wrapper-left-section">
+                            <button className="media-button media-control-close" onClick={() => close()}>
+                                {
+                                    <i className="iconfont icon-back" />
+                                }
+                            </button>
 
-                        <span>{props.title}</span>
+                            <span>{props.title}</span>
+                        </div>
+
+                        <div className="media-title-wrapper-right-section">
+                            <button onClick={() => addToDownloadList()}>
+                                <i className="icon-download iconfont" /> 缓存
+                            </button>
+                        </div>
                     </div>
                 }
 

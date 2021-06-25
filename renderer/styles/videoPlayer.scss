@@ -44,10 +44,37 @@
     z-index:100;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 16px;
 
-    span{
-      color: #fff;
+    .media-title-wrapper-left-section{
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+
+      span{
+        color: #fff;
+        line-height: 30px;
+      }
+    }
+
+    .media-title-wrapper-right-section{
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+
+      button{
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: rgba(255,255,255, 0.3);
+        transition: all 0.2s;
+        cursor: pointer;
+
+        &:hover{
+          color:  rgb(250, 107, 147);
+        }
+      }
     }
   }
 

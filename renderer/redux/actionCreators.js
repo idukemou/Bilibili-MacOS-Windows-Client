@@ -6,7 +6,8 @@ import {
     APPEND_RECOMMEND_LIST,
     PLAY_VIDEO_INFO,
     PLAY_VIDEO_STATUS,
-    USER_INFO
+    USER_INFO,
+    DOWNLOADING_LIST
 } from "./actionTypes";
 
 
@@ -48,4 +49,9 @@ export const platVideoStatusAction = (status) => ({
 export const getUserInfoAction = (profile) => ({
     type: USER_INFO,
     profile
+})
+
+export const updateDownloadingListAction = (list) => ({
+    type: DOWNLOADING_LIST,
+    list
 })

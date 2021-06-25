@@ -88,12 +88,20 @@ export default function MyViewHistory(props){
         <div id="user-content-wrapper">
             <div className="user-content-header">
                 <Header
-                    left={enabledEdit && <div>
-                        <Button type="link" disabled={checkList.length === 0 && true} onClick={() => deleteViewHistory()}>删除</Button>
-                        <Button type="link" onClick={() => checkAll()}>{checkedAll ? "反选" : "全选"}</Button>
-                    </div>}
+                    left={
+                        enabledEdit && <div>
+                            <Button type="link" disabled={checkList.length === 0 && true} onClick={() => deleteViewHistory()}>删除</Button>
+                            <Button type="link" onClick={() => checkAll()}>{checkedAll ? "反选" : "全选"}</Button>
+                        </div>
+                    }
                     center={<span>{props.active.name}</span>}
-                    right={<Button type="link" onClick={() => setEnabledEdit(!enabledEdit)}>{enabledEdit ? "取消": "编辑"}</Button>}
+                    right={
+
+                        <>
+                            {enabledEdit && <Button type="link" onClick={() => checkAll()}>一键清空</Button>}
+                            <Button type="link" onClick={() => setEnabledEdit(!enabledEdit)}>{enabledEdit ? "取消": "编辑"}</Button>
+                        </>
+                    }
                 />
             </div>
 

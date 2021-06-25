@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 export const APP_DIRECTORY = path.join(USER_HOME, '.bilibili');
+export const DEFAULT_DOWNLOAD_DIR = path.join(USER_HOME, 'Desktop');
 export const COOKIEJAR = path.join(APP_DIRECTORY, '.cookiejar');
 export const CONFIG = path.join(APP_DIRECTORY, 'bilibili.config.json');
 export const DOWNLOADING = path.join(APP_DIRECTORY, 'bilibili.downloading.json');

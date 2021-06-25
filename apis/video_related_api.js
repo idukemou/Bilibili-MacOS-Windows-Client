@@ -66,3 +66,28 @@ export async function updateVideoPlayProgress(aid, cid, progress){
 
     return data;
 }
+
+export async function uploadVideoHeartBeat(aid, bvid, cid, progress){
+    const cmd = `https://api.bilibili.com/x/click-interface/web/heartbeat`;
+    let data = null;
+
+    const cookies = await parseCookieJarFile();
+
+    await curly.post(cmd, {
+        COOKIEJAR: COOKIEJAR,
+        COOKIEFILE: COOKIEJAR,
+        POSTFIELDS: querystring.stringify({
+            "aid": aid,
+            "cid": cid,
+            "bvid": bvid,
+            "played_time": progress,
+            "realtime": progress,
+            "csrf": cookies['bili_jct']
+        })
+    })
+        .then(res => {
+            data = res;
+        });
+
+    return data;
+}

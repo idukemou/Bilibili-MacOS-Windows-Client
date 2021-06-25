@@ -36,7 +36,7 @@ async function getVideoFlvUrl(bvid, cid){
                 return;
             }
 
-            data = result.data;
+            data = result;
         })
 
     return data;
@@ -66,7 +66,7 @@ async function getVideoPlayInfo(bvid){
     const videoUrl = await getVideoFlvUrl(bvid, videoDetail.cid);
     return {
         info: videoDetail,
-        url: videoUrl
+        url: videoUrl.data
     };
 }
 
@@ -74,5 +74,7 @@ async function getVideoPlayInfo(bvid){
 
 export {
     getRecommendList,
-    getVideoPlayInfo
+    getVideoPlayInfo,
+    getVideoFlvUrl,
+    getVideoDetails
 }

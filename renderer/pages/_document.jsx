@@ -6,7 +6,7 @@ export default class MyDocument extends Document {
             <Html>
             <Head>
                 <meta charSet='utf-8' />
-                <link rel="stylesheet" href="https://at.alicdn.com/t/font_2503344_ssacli0ykfa.css"/>
+                <link rel="stylesheet" href="https://at.alicdn.com/t/font_2503344_r9mtsq9ja7b.css"/>
                 <meta name="referrer" content="no-referrer" />
             </Head>
             <body>

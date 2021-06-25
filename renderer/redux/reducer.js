@@ -5,7 +5,8 @@ import {
     GET_RECOMMEND_LIST,
     PLAY_VIDEO_INFO,
     APPEND_RECOMMEND_LIST,
-    PLAY_VIDEO_STATUS, USER_INFO
+    PLAY_VIDEO_STATUS, USER_INFO,
+    DOWNLOADING_LIST
 } from './actionTypes';
 
 const defaultState = {
@@ -23,7 +24,8 @@ const defaultState = {
     playVideoStatus: false,
     userInfo: {
         isLogin: false
-    }
+    },
+    downloadingList: []
 };
 
 export default function reducerHandler(state = defaultState, action) {
@@ -60,6 +62,10 @@ export default function reducerHandler(state = defaultState, action) {
     }
     else if(action.type === USER_INFO){
         newState.userInfo = action.profile;
+        return newState;
+    }
+    else if(action.type === DOWNLOADING_LIST){
+        newState.downloadingList = action.list;
         return newState;
     }
 
